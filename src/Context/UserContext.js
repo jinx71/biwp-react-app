@@ -10,7 +10,7 @@ const auth = getAuth(app)
 const googleProvider = new GoogleAuthProvider();
 
 const UserContext = ({ children }) => {
-
+    const dummyContext = { a: 1 }
     const [user, setUser] = useState({})
     const [loading, setLoading] = useState(true)
     const [serviceLength, setServiceLength] = useState(0)
@@ -43,7 +43,7 @@ const UserContext = ({ children }) => {
         }
     }, [])
 
-    const authInfo = { user, signin, createUser, loading, signout, handleGoogleSignIn, updateUserProfile, serviceLength, setServiceLength, serverStatus, setServerStatus }
+    const authInfo = { dummyContext, user, signin, createUser, loading, signout, handleGoogleSignIn, updateUserProfile, serviceLength, setServiceLength, serverStatus, setServerStatus }
     return (
         <AuthContext.Provider value={authInfo}>
             {children}

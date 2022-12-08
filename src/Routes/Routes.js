@@ -5,6 +5,7 @@ import Home from '../Component/Pages/Home/Home';
 import Login from '../Component/Pages/Login/Login';
 import NotFound from '../Component/Pages/NotFound/NotFound';
 import Signup from '../Component/Pages/Signup/Signup';
+import Users from '../Component/Pages/Users/Users';
 
 import Main from '../Layout/Main';
 
@@ -17,16 +18,18 @@ export const router = createBrowserRouter([
             {
                 path: "/",
                 element: <Home></Home>,
-                loader: ({ params }) => fetch('https://travel-guide-server-jinx71.vercel.app/')
             },
             {
                 path: "/home",
                 element: <Home></Home>,
-                loader: ({ params }) => fetch('https://travel-guide-server-jinx71.vercel.app/')
             },
             {
                 path: "/blog",
                 element: <Blog></Blog>
+            },
+            {
+                path: "/users",
+                element: <Users></Users>
             },
             {
                 path: "/login",

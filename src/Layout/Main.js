@@ -13,8 +13,9 @@ const Main = () => {
             <Background>
                 <Navigation></Navigation>
                 <Outlet></Outlet>
-                <Footer></Footer>
+
             </Background>
+            <Footer></Footer>
 
         </>
     );

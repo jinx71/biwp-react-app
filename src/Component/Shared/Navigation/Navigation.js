@@ -1,25 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../../Context/UserContext';
 import ToggleTheme from '../ToggleTheme/ToggleTheme';
 const Navigation = () => {
+    const { user, signout } = useContext(AuthContext);
     const menuItems = [
         {
             pathName: 'Home',
-            pathRoute: "/",
+            pathRoute: "/home",
         },
         {
             pathName: 'Blog',
             pathRoute: '/blog',
         },
         {
-            pathName: 'Login',
-            pathRoute: '/login',
+            pathName: 'Users',
+            pathRoute: '/users',
         },
-        {
-            pathName: 'Signup',
-            pathRoute: '/signup',
-        },
-
     ]
     return (
         <div className="navbar">
@@ -32,14 +29,20 @@ const Navigation = () => {
                         {
                             menuItems.map(menuItem => <li ><Link className='btn btn-outline btn-primary my-3 rounded-lg  ' to={menuItem.pathRoute}>{menuItem.pathName}</Link></li>)
                         }
+                        {
+                            user && user.uid ? <li ><Link className='btn btn-outline btn-primary mx-5 rounded-lg ' to={'/login'} onClick={signout}>Logout</Link></li> : <><li ><Link className='btn btn-outline btn-primary mx-5 rounded-lg ' to={'/login'}>Login</Link></li><li ><Link className='btn btn-outline btn-primary mx-5 rounded-lg ' to={'/signup'}>Signup</Link></li></>
+                        }
                     </ul>
                 </div>
-                <a className="btn btn-ghost normal-case text-xl text-primary">React Assignment</a>
+                <Link to="/" className="btn btn-ghost normal-case text-xl text-primary">React Assignment</Link>
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal p-0">
                     {
                         menuItems.map(menuItem => <li ><Link className='btn btn-outline btn-primary mx-5 rounded-lg ' to={menuItem.pathRoute}>{menuItem.pathName}</Link></li>)
+                    }
+                    {
+                        user && user.uid ? <li ><Link className='btn btn-outline btn-primary mx-5 rounded-lg ' to={'/login'} onClick={signout}>Logout</Link></li> : <><li ><Link className='btn btn-outline btn-primary mx-5 rounded-lg ' to={'/login'}>Login</Link></li><li ><Link className='btn btn-outline btn-primary mx-5 rounded-lg ' to={'/signup'}>Signup</Link></li></>
                     }
                 </ul>
             </div>
