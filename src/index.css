@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 body {
-  margin: 0;
+
   font-family: 'Inter', sans-serif, 'Poppins', sans-serif;
+  max-width: 1440px;
+  margin: 0 auto;
+
 }
