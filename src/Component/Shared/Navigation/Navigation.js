@@ -10,10 +10,6 @@ const Navigation = () => {
             pathRoute: "/home",
         },
         {
-            pathName: 'Blog',
-            pathRoute: '/blog',
-        },
-        {
             pathName: 'Users',
             pathRoute: '/users',
         },
@@ -48,7 +44,9 @@ const Navigation = () => {
             </div>
             <div className="navbar-end">
                 <div className="">
-                    <ToggleTheme></ToggleTheme>
+                    {
+                        user && user.uid ? <p>{user.email}</p> : null
+                    }
                 </div>
             </div>
         </div>

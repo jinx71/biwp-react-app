@@ -1,6 +1,5 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import Blog from '../Component/Pages/Blog/Blog';
 import Home from '../Component/Pages/Home/Home';
 import Login from '../Component/Pages/Login/Login';
 import NotFound from '../Component/Pages/NotFound/NotFound';
@@ -13,7 +12,6 @@ export const router = createBrowserRouter([
     {
         path: "/",
         element: <Main></Main>,
-        loader: ({ params }) => fetch(''),
         children: [
             {
                 path: "/",
@@ -23,10 +21,7 @@ export const router = createBrowserRouter([
                 path: "/home",
                 element: <Home></Home>,
             },
-            {
-                path: "/blog",
-                element: <Blog></Blog>
-            },
+
             {
                 path: "/users",
                 element: <Users></Users>
