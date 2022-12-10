@@ -1,35 +1,26 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from '../../../Firebase/Firebase.init';
+
+import CreateModal from '../../Shared/CreateModal/CreateModal';
+
 const Users = () => {
-    const addUser = async (e) => {
-        e.preventDefault();
-        const users = {
-            userEmail: "b@c.com",
-            userName: "Alan Turing"
-        }
-        try {
-            const docRef = await addDoc(collection(db, "users"), {
-                users: users,
-            });
-            console.log("Document written with ID: ", docRef.id);
-        } catch (e) {
-            console.error("Error adding document: ", e);
-        }
-    }
+    const [showUpdate, setShowUpdate] = useState("")
+    const [users, setUsers] = useState([])
 
+    // Read Operation
     const fetchPost = async () => {
-
         await getDocs(collection(db, "users"))
             .then((querySnapshot) => {
                 const newData = querySnapshot.docs
                     .map((doc) => ({ ...doc.data(), id: doc.id }));
-                console.log(newData);
-                // console.log(todos, newData);
+                setUsers(newData);
             })
 
     }
-    const handleDeletingTicket = async (id) => {
+    // Delete Operation
+    const handleDeleteUser = async (id) => {
+        console.log(id)
         try {
             await deleteDoc(doc(db, "users", id));
             console.log("Deleted")
@@ -38,100 +29,100 @@ const Users = () => {
         }
 
     }
-    const handleEditingTicketInList = async (ticketToEdit) => {
-        const ticketRef = doc(db, "tickets", ticketToEdit.id);
-        await updateDoc(ticketRef, ticketToEdit);
-    }
-    const handleUpdate = async (e) => {
+
+
+    const handleUpdateUser = async (e) => {
         e.preventDefault()
-        const taskDocRef = doc(db, 'users', id)
+        // console.log(id)
+        setShowUpdate("")
+        console.log(showUpdate)
+        const form = e.target
+        const userEmail = form.userEmail.value;
+        const userName = form.userName.value;
+        console.log(userEmail, userName)
+        const users = {
+            userEmail: userEmail,
+            userName: userName
+        }
+        const taskDocRef = doc(db, 'users', showUpdate)
         try {
             await updateDoc(taskDocRef, {
-                userEmail: "c@d.com",
+                users
             })
         } catch (err) {
             alert(err)
         }
     }
+
+
     useEffect(() => {
         fetchPost();
-    }, [])
-
+    }, [users])
+    // updateUser("asdasd")
     return (
-        <div className='min-h-screen'>
-            <div className='flex justify-between items-center my-10'>
-                <h1 className='text-3xl'>Users Database CRUD Operation With Firestore</h1>
-                <button className='btn btn-primary' onClick={addUser}>Add a new user</button>
-            </div>
-            <div class="flex flex-col">
-                <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-                        <div class="overflow-hidden">
-                            <table class="min-w-full">
-                                <thead class="bg-white border-b">
-                                    <tr>
-                                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                            #
-                                        </th>
-                                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                            First
-                                        </th>
-                                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                            Last
-                                        </th>
-                                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                            Handle
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">1</td>
-                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                            Mark
-                                        </td>
-                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                            Otto
-                                        </td>
-                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                            <div className="btn-group">
-                                                <button className="btn btn-active" onClick={() => { handleDeletingTicket("8QmAsrTIZceUfNzBWlON") }}>Delete</button>
-                                                <button className="btn" onClick={() => { handleUpdate("8QmAsrTIZceUfNzBWlON") }}>Edit</button>
-                                                {/* <button className="btn">Button</button> */}
+        <>
+            <div className='min-h-screen'>
+                <div className='flex justify-between items-center my-10'>
+                    <h1 className='text-3xl'>Users Database CRUD Operation With Firestore</h1>
+                    <label htmlFor="CreateModal" className='btn btn-primary'
+                    >Create a new user</label>
+                </div>
+                <div className='grid grid-cols-3 lg:grid-col-3 gap-5'>
+                    {
+                        users.map(user => {
+                            return (
+                                <>
+                                    <div className="card w-96 bg-base-100 shadow-xl">
+                                        <div className="card-body">
+                                            <h2 className="card-title">{user.users.userName}</h2>
+                                            <p>{user.users.userEmail}</p>
+                                            <div className="card-actions justify-end">
+                                                <button className="btn btn-primary" onClick={() => setShowUpdate(user.id)}>Update</button>
+                                                <button className="btn btn-primary" onClick={() => handleDeleteUser(user.id)}>Delete</button>
                                             </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">2</td>
-                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                            Jacob
-                                        </td>
-                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                            Thornton
-                                        </td>
-                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                            @fat
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">3</td>
-                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                            Larry
-                                        </td>
-                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                            Wild
-                                        </td>
-                                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                            @twitter
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                                        </div>
+                                    </div>
+                                    {
+                                        showUpdate == user.id ? <div className="card bg-base-100 shadow-xl col-span-3">
+                                            <div className="card-body">
+                                                <h2 className="card-title">Update User</h2>
+                                                <form onSubmit={handleUpdateUser}>
+                                                    <div className="form-control">
+                                                        <label className="label">
+                                                            <span className="label-text dark:text-white">Enter User Name</span>
+                                                        </label>
+                                                        <input type="text" name="userName" placeholder="User Name" className="input input-bordered" />
+                                                    </div>
+                                                    <div className="form-control">
+                                                        <label className="label">
+                                                            <span className="label-text dark:text-white">Enter User Email</span>
+                                                        </label>
+                                                        <input type="email" name="userEmail" placeholder="User email" className="input input-bordered" />
+                                                    </div>
+                                                    {/* <div className="form-control modal-action mt-2">
+                                                        <button><label htmlFor="CreateModal" className="btn btn-primary">Create</label></button>
+                                                    </div> */}
+
+
+
+                                                    <div className="card-actions justify-end form-control mt-2">
+                                                        <button className="btn btn-primary" >Update</button>
+
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div> : null
+                                    }
+                                </>
+                            )
+                        })
+                    }
                 </div>
             </div>
-        </div>
+            <CreateModal></CreateModal>
+
+
+        </>
     );
 };
 
